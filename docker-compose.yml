@@ -1,0 +1,34 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo-track-wise
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: track-wise
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/mongo
+    command: ["--auth"]
+
+  server:
+    build: .
+    container_name: node-track-wise
+    environment:
+      DB_HOST: mongo
+      DB_NAME: track-wise
+      DB_USER: root
+      DB_PASSWORD: root
+      NODE_ENV: development
+      PORT: 5001
+    env_file:
+      - ./.env
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mongo
+    volumes:
+      - ./:/app
+volumes:
+  mongodb_data:
