@@ -1,5 +1,5 @@
 const { google } = require("googleapis");
-const { startOfWeek, endOfWeek, format } = require("date-fns");
+const { startOfWeek, endOfWeek, startOfDay, endOfDay } = require("date-fns");
 
 class GoogleCalendarService {
   constructor(authService) {
@@ -13,11 +13,15 @@ class GoogleCalendarService {
     return calendarList.data.items;
   }
 
-  async getEvents(user, calendarId) {
+  async getEvents(user, calendarId, options) {
     const auth = await this.authService.renewCredentials(user);
     const calendar = google.calendar({ version: "v3", auth });
-    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 }); // Monday as start of week
-    const weekEnd = endOfWeek(new Date(), { weekStartsOn: 1 }); // Sunday as end of week
+    const weekStart = options.start
+      ? startOfDay(new Date(options.start))
+      : startOfWeek(new Date(), { weekStartsOn: 1 }); // Monday as start of week
+    const weekEnd = options.end
+      ? endOfDay(new Date(options.end))
+      : endOfWeek(new Date(), { weekStartsOn: 1 }); // Sunday as end of week
 
     const res = await calendar.events.list({
       calendarId: calendarId,

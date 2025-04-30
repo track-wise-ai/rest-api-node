@@ -56,12 +56,13 @@ const callback = async (req, reply) => {
 
 const root = async (req, reply) => {
   const { email } = req.user.payload;
+  const { start, end } = req.query;
 
   try {
     const user = await User.findOne({ email });
 
     const events = await Promise.all((user?.google?.calendarIds || []).map((calendarId) => {
-      return googleCalendarService.getEvents(user, calendarId);
+      return googleCalendarService.getEvents(user, calendarId, { start, end });
     }));
 
     const sortedEvents = events
