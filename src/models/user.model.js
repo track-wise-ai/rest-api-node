@@ -35,7 +35,12 @@ const UserSchema = new mongoose.Schema({
     },
     tokens: {
       type: Object,
-    }
+    },
+  },
+  jira: {
+    url: { type: String },
+    apiKey: { type: String },
+    issueKey: { type: String },
   },
 });
 

@@ -19,12 +19,7 @@ const settings = async (req, reply) => {
       { upsert: true },
     );
 
-    reply.send({
-      authUrl,
-      connect: Boolean(user.google.tokens),
-      calendars,
-      selectedCalendars: user.google?.calendarIds || [],
-    });
+    reply.send({ authUrl, calendars });
   } catch (error) {
     reply.status(500).send(error);
   }
