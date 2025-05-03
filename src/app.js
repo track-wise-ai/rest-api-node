@@ -9,7 +9,6 @@ const {
   userRoutes,
   authRoutes,
   rootRoutes,
-  systemRoutes,
   googleRoutes,
   settingsRoutes,
 } = require("./routes");
@@ -35,11 +34,10 @@ fastify.register(hasRolePlugin);
 
 fastify.register(rootRoutes, { prefix: "/" });
 fastify.register(authRoutes, { prefix: "/api/v1" });
-fastify.register(systemRoutes, { prefix: "/api/v1" });
 fastify.register(userRoutes, { prefix: "/api/v1/users" });
+fastify.register(settingsRoutes, { prefix: "/api/v1/settings" });
 fastify.register(googleRoutes, { prefix: "/api/v1/google" });
 fastify.register(aiRoutes, { prefix: "/api/v1/ai" });
-fastify.register(settingsRoutes, { prefix: "/api/v1/settings" });
 
 //? 3. decorators
 

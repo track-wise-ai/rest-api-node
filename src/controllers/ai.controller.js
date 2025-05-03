@@ -22,8 +22,6 @@ const root = async (req, reply) => {
 const generate = async (req, reply) => {
   try {
     const { model, events } = req.body;
-
-    // console.log(">>> generate:", aiService.buildPrompt(events));
     const prompt =  aiService.buildPrompt(events);
     const result = await aiService.chat(prompt, { model });
 
