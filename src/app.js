@@ -6,6 +6,7 @@ require("dotenv").config();
 const { MONGODB_URI, PUBLIC_DIR, isDev } = require("./constants");
 const {
   aiRoutes,
+  jiraRoutes,
   userRoutes,
   authRoutes,
   rootRoutes,
@@ -38,6 +39,7 @@ fastify.register(userRoutes, { prefix: "/api/v1/users" });
 fastify.register(settingsRoutes, { prefix: "/api/v1/settings" });
 fastify.register(googleRoutes, { prefix: "/api/v1/google" });
 fastify.register(aiRoutes, { prefix: "/api/v1/ai" });
+fastify.register(jiraRoutes, { prefix: "/api/v1/jira" });
 
 //? 3. decorators
 

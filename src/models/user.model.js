@@ -41,6 +41,7 @@ const UserSchema = new mongoose.Schema({
     url: { type: String },
     apiKey: { type: String },
     issueKey: { type: String },
+    default: {},
   },
 });
 
