@@ -1,3 +1,4 @@
+const { AI_MODELS } = require("../constants");
 const { User } = require("../models");
 
 const getSettings = async (req, reply) => {
@@ -11,7 +12,11 @@ const getSettings = async (req, reply) => {
         connect: Boolean(user.google.tokens),
         selectedCalendars: user.google?.calendarIds || [],
       },
-      jira: user.jira,
+      jira: user.jira || {},
+      ai: {
+        ...user.ai || {},
+        models: AI_MODELS,
+      },
     });
   } catch (error) {
     reply.status(500).send(error);
@@ -31,6 +36,7 @@ const saveSettings = async (req, reply) => {
       apiKey: settings.jiraApiKey,
       issueKey: settings.jiraIssueKey,
     };
+    user.ai.selectedModel = settings.aiModel;
 
     await user.save();
 

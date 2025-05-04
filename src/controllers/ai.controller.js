@@ -1,29 +1,25 @@
+const { User } = require("../models");
 const {
   OpenAIService,
   TogetherService,
   AnthropicService,
   OpenRouterService,
 } = require("../services");
-const { AI_MODELS } = require("../constants");
 
 // const aiService = new OpenAIService();
 const aiService = new OpenRouterService();
 // const aiService = new AnthropicService();
 // const aiService = new TogetherService();
 
-const root = async (req, reply) => {
-  try {
-    reply.send({ models: AI_MODELS });
-  } catch (error) {
-    reply.status(500).send(error);
-  }
-};
-
 const generate = async (req, reply) => {
+  const { email } = req.user.payload;
+
   try {
-    const { model, events } = req.body;
+    const user = await User.findOne({ email });
+
+    const { events } = req.body;
     const prompt =  aiService.buildPrompt(events);
-    const result = await aiService.chat(prompt, { model });
+    const result = await aiService.chat(prompt, { model: user?.ai?.selectedModel });
 
     reply.send(result);
   } catch (error) {
@@ -31,18 +27,4 @@ const generate = async (req, reply) => {
   }
 };
 
-const settings = async (req, reply) => {
-  try {
-    const prompt = "write a haiku about ai";
-    const result = await aiService.chat(prompt);
-
-    reply.send({
-      connect: true,
-      result,
-    });
-  } catch (error) {
-    reply.status(500).send(error);
-  }
-};
-
-module.exports = { root, generate, settings };
+module.exports = { generate };

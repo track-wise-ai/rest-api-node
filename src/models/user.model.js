@@ -29,18 +29,19 @@ const UserSchema = new mongoose.Schema({
     default: "member",
   },
   google: {
-    calendarIds: {
-      type: Array,
-      default: [],
-    },
-    tokens: {
-      type: Object,
-    },
+    calendarIds: { type: Array, default: [] },
+    tokens: { type: Object },
+    default: {},
   },
   jira: {
     url: { type: String },
     apiKey: { type: String },
     issueKey: { type: String },
+    default: {},
+  },
+  ai: {
+    provider: { type: String },
+    selectedModel: { type: String },
     default: {},
   },
 });
