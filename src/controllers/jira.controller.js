@@ -9,11 +9,12 @@ const syncTrackLog = async (req, reply) => {
 
   try {
     const user = await User.findOne({ email });
-    const { url, apiKey, issueKey } = user.jira || {};
+    const { issueKey, ...jiraSettings } = user.jira || {};
     const parsedTrackLog = JSON.parse(trackLog);
     const worklogs = Array.isArray(parsedTrackLog) ? parsedTrackLog : [];
 
-    jiraService.init(url, apiKey);
+    jiraService.init(jiraSettings);
+
     await Promise.all(worklogs.map((workLog) => {
       return jiraService.addWorkLog(issueKey, workLog);
     }));

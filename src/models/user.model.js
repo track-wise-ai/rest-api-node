@@ -35,6 +35,12 @@ const UserSchema = new mongoose.Schema({
   },
   jira: {
     url: { type: String },
+    authType: {
+      type: String,
+      enum: ["basic", "bearer"],
+      default: "bearer",
+    },
+    email: { type: String },
     apiKey: { type: String },
     issueKey: { type: String },
     default: {},

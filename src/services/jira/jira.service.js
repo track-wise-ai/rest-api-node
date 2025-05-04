@@ -6,16 +6,21 @@ class JiraService {
     this.headers = null;
   }
 
-  init(url, apiKey) {
+  init({ url, apiKey, authType, email }) {
     if (!url || !apiKey) {
       throw new Error('Jira URL and API key are required');
     }
 
+    if (authType === "basic" && !email) {
+      throw new Error('Email is required for basic authentication');
+    }
+
     this.baseUrl = url;
     this.headers = {
-      "Authorization": `Bearer ${apiKey}`,
-      // 'Authorization': `Basic ${Buffer.from(`ilia.makarov@me.com:${apiKey}`).toString('base64')}`,
       "Content-Type": "application/json",
+      "Authorization": (authType === "basic")
+        ? `Basic ${Buffer.from(`ilia.makarov@me.com:${apiKey}`).toString('base64')}`
+        : `Bearer ${apiKey}`
     };
   }
 

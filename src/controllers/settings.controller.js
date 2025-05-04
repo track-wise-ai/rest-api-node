@@ -31,11 +31,13 @@ const saveSettings = async (req, reply) => {
     const user = await User.findOne({ email });
 
     user.google.calendarIds = settings.googleCalendars;
-    user.jira = {
-      url: settings.jiraUrl,
-      apiKey: settings.jiraApiKey,
-      issueKey: settings.jiraIssueKey,
-    };
+
+    user.jira.url = settings.jiraUrl;
+    user.jira.apiKey = settings.jiraApiKey,
+    user.jira.issueKey = settings.jiraIssueKey,
+    user.jira.authType = settings.jiraAuthType,
+    user.jira.email = settings.jiraEmail;
+
     user.ai.selectedModel = settings.aiModel;
 
     await user.save();
