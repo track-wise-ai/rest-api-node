@@ -8,11 +8,12 @@
   "description": "TrackWise is an intelligent service that fetches your schedule from Google Calendar, generates AI-powered descriptions, and syncs tasks with Jira for efficient tracking.",
   "type": "commonjs",
   "scripts": {
-    "start:dev": "NODE_ENV=development nodemon ./src/app.js",
-    "start": "NODE_ENV=production node ./src/app.js",
+    "serve:dev": "NODE_ENV=development nodemon ./src/app.js",
+    "serve:prod": "NODE_ENV=production node ./src/app.js",
     "docker:start": "docker compose up",
     "docker:stop": "docker compose down",
-    "deploy": "npx genezio deploy --env ./.env.production"
+    "deploy": "npx genezio deploy --env ./.env.production",
+    "start": "npm run docker:start"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.0",
