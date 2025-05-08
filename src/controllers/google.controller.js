@@ -25,12 +25,6 @@ const settings = async (req, reply) => {
   }
 };
 
-const connect = async (req, reply) => {
-  setTimeout(() => {
-    reply.send({ google: "connect" });
-  }, 3000);
-};
-
 const disconnect = async (req, reply) => {
   reply.send({ google: "disconnect" });
 };
@@ -74,4 +68,4 @@ const root = async (req, reply) => {
   }
 };
 
-module.exports = { settings, callback, connect, disconnect, root };
+module.exports = { settings, callback, disconnect, root };

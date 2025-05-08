@@ -33,7 +33,7 @@ fastify.register(require("@fastify/cors"), {
 fastify.register(jwtPlugin);
 fastify.register(hasRolePlugin);
 
-fastify.register(rootRoutes, { prefix: "/" });
+fastify.register(rootRoutes, { prefix: "/api/v1" });
 fastify.register(authRoutes, { prefix: "/api/v1" });
 fastify.register(userRoutes, { prefix: "/api/v1/users" });
 fastify.register(settingsRoutes, { prefix: "/api/v1/settings" });

@@ -3,7 +3,15 @@ const { JiraService } = require("../services");
 
 const jiraService = new JiraService();
 
-const syncTrackLog = async (req, reply) => {
+const getWorkLogs = async () => {
+  try {
+    reply.send({ success: true, worklogs: [] });
+  } catch (error) {
+    reply.status(500).send(error);
+  }
+};
+
+const postWorkLogs = async (req, reply) => {
   const { trackLog } = req.body;
   const { email } = req.user.payload;
 
@@ -25,4 +33,4 @@ const syncTrackLog = async (req, reply) => {
   }
 };
 
-module.exports = { syncTrackLog };
+module.exports = { getWorkLogs, postWorkLogs };
