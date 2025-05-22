@@ -1,9 +1,5 @@
-const root = async (req, reply) => {
-  return reply.status(200).type("text/html").sendFile("index.html");
-};
-
 const ping = async (req, reply) => {
-  return reply.status(200).send({ ping: "pong" });
+  return reply.status(200).send("pong");
 };
 
-module.exports = { root, ping };
+module.exports = { ping };

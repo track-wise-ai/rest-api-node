@@ -1,4 +1,3 @@
-const path = require("node:path");
 const fastify = require("fastify")({ logger: true });
 const fastifyStatic = require("@fastify/static");
 const mongoose = require("mongoose");
@@ -7,7 +6,6 @@ const { MONGODB_URI, PUBLIC_DIR, isDev } = require("./constants");
 const {
   aiRoutes,
   jiraRoutes,
-  userRoutes,
   authRoutes,
   rootRoutes,
   googleRoutes,
@@ -33,9 +31,8 @@ fastify.register(require("@fastify/cors"), {
 fastify.register(jwtPlugin);
 fastify.register(hasRolePlugin);
 
-fastify.register(rootRoutes, { prefix: "/" });
+fastify.register(rootRoutes, { prefix: "/api/v1" });
 fastify.register(authRoutes, { prefix: "/api/v1" });
-fastify.register(userRoutes, { prefix: "/api/v1/users" });
 fastify.register(settingsRoutes, { prefix: "/api/v1/settings" });
 fastify.register(googleRoutes, { prefix: "/api/v1/google" });
 fastify.register(aiRoutes, { prefix: "/api/v1/ai" });
