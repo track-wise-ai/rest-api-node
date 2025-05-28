@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, type TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { CoffeesModule } from './coffees/coffees.module';
+import { RootController } from './root/root.controller';
+import { SettingsModule } from './settings/settings.module';
+import { GoogleModule } from './google/google.module';
+import { AuthModule } from './auth/auth.module';
+import { AiModule } from './ai/ai.module';
+import { JiraModule } from './jira/jira.module';
 
 const pgOptions: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -16,8 +19,15 @@ const pgOptions: TypeOrmModuleOptions = {
 };
 
 @Module({
-  imports: [CoffeesModule, TypeOrmModule.forRoot(pgOptions)],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    TypeOrmModule.forRoot(pgOptions),
+    AuthModule,
+    GoogleModule,
+    SettingsModule,
+    AiModule,
+    JiraModule,
+  ],
+  providers: [],
+  controllers: [RootController],
 })
 export class AppModule {}
