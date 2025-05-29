@@ -1,0 +1,34 @@
+import { registerAs } from '@nestjs/config';
+
+const appConfig = registerAs('app', () => ({
+  environment: process.env.NODE_ENV || 'development',
+  port: parseInt(process.env.PORT || '5001', 10),
+}));
+
+const dbConfig = registerAs('db', () => ({
+  host: process.env.DATABASE_HOST,
+  port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+  username: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
+}));
+
+const jwtConfig = registerAs('jwt', () => ({
+  secret: process.env.JWT_SECRET,
+  expiresIn: process.env.JWT_EXPIRES_IN || '1d',
+}));
+
+const googleConfig = registerAs('google', () => ({
+  clientId: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  redirectUri: process.env.GOOGLE_REDIRECT_URI,
+}));
+
+const aiConfig = registerAs('ai', () => ({
+  openaiApiKey: process.env.OPENAI_API_KEY,
+  openRouterApiKey: process.env.OPEN_ROUTER_API_KEY,
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+  togetherAiApiKey: process.env.TOGETHER_AI_API_KEY,
+}));
+
+export { appConfig, dbConfig, jwtConfig, googleConfig, aiConfig };

@@ -1,31 +1,42 @@
 import * as Joi from 'joi';
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RootController } from './root/root.controller';
 import { SettingsModule } from './settings/settings.module';
 import { GoogleModule } from './google/google.module';
 import { AuthModule } from './auth/auth.module';
 import { AiModule } from './ai/ai.module';
 import { JiraModule } from './jira/jira.module';
+import {
+  aiConfig,
+  dbConfig,
+  jwtConfig,
+  appConfig,
+  googleConfig,
+} from './config/app.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      load: [appConfig, dbConfig, aiConfig, jwtConfig, googleConfig],
       validationSchema: Joi.object({
         DATABASE_HOST: Joi.string().required(),
         DATABASE_PORT: Joi.number().default(5432),
+        DATABASE_USER: Joi.string().required(),
+        DATABASE_PASSWORD: Joi.string().required(),
+        DATABASE_NAME: Joi.string().required(),
       }),
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      port: Number(process.env.DATABASE_PORT),
-      host: process.env.DATABASE_HOST,
-      autoLoadEntities: true,
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        autoLoadEntities: true,
+        synchronize: true,
+        ...configService.get<TypeOrmModuleAsyncOptions>('db'),
+      }),
     }),
     AuthModule,
     GoogleModule,
