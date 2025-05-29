@@ -1,24 +1,27 @@
 import { Get, Controller } from '@nestjs/common';
+import { GoogleService } from './google.service';
 
-@Controller('google')
+@Controller('/google')
 export class GoogleController {
-  @Get('callback')
+  constructor(private readonly googleService: GoogleService) {}
+
+  @Get('/callback')
   authCallback() {
-    return 'google:callback';
+    return this.googleService.authCallback();
   }
 
-  @Get('events')
+  @Get('/events')
   getEvents() {
-    return 'google:events';
+    return this.googleService.getEvents();
   }
 
   @Get('/calendars')
   getCalendars() {
-    return 'google:calendars';
+    return this.googleService.getCalendars();
   }
 
-  @Get('auth-link')
-  authLink() {
-    return 'google:auth-link';
+  @Get('/auth-link')
+  getAuthLink() {
+    return this.googleService.getAuthLink();
   }
 }

@@ -1,4 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class AiService {}
+export class AiService {
+  generate() {
+    return 'ai';
+  }
+}

@@ -1,4 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class JiraService {}
+export class JiraService {
+  syncTrackLog() {
+    return 'jira:track-log';
+  }
+}
