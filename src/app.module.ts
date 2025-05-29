@@ -1,3 +1,4 @@
+import * as Joi from 'joi';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -10,7 +11,12 @@ import { JiraModule } from './jira/jira.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      validationSchema: Joi.object({
+        DATABASE_HOST: Joi.string().required(),
+        DATABASE_PORT: Joi.number().default(5432),
+      }),
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       username: process.env.DATABASE_USER,
