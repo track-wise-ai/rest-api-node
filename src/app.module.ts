@@ -8,6 +8,7 @@ import { GoogleModule } from './google/google.module';
 import { AuthModule } from './auth/auth.module';
 import { AiModule } from './ai/ai.module';
 import { JiraModule } from './jira/jira.module';
+import { UsersModule } from './users/users.module';
 import {
   aiConfig,
   dbConfig,
@@ -43,6 +44,7 @@ import {
     SettingsModule,
     AiModule,
     JiraModule,
+    UsersModule,
   ],
   providers: [],
   controllers: [RootController],
