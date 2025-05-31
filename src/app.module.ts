@@ -5,7 +5,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RootController } from './root/root.controller';
 import { SettingsModule } from './settings/settings.module';
 import { GoogleModule } from './google/google.module';
-import { AuthModule } from './auth/auth.module';
 import { AiModule } from './ai/ai.module';
 import { JiraModule } from './jira/jira.module';
 import { UsersModule } from './users/users.module';
@@ -16,6 +15,7 @@ import {
   appConfig,
   googleConfig,
 } from './config/app.config';
+import { IamModule } from './iam/iam.module';
 
 @Module({
   imports: [
@@ -39,12 +39,12 @@ import {
         ...configService.get<TypeOrmModuleAsyncOptions>('db'),
       }),
     }),
-    AuthModule,
     GoogleModule,
     SettingsModule,
     AiModule,
     JiraModule,
     UsersModule,
+    IamModule,
   ],
   providers: [],
   controllers: [RootController],
