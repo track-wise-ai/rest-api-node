@@ -13,11 +13,6 @@ const dbConfig = registerAs('db', () => ({
   database: process.env.DATABASE_NAME,
 }));
 
-const jwtConfig = registerAs('jwt', () => ({
-  secret: process.env.JWT_SECRET,
-  expiresIn: process.env.JWT_EXPIRES_IN || '1d',
-}));
-
 const googleConfig = registerAs('google', () => ({
   clientId: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -31,4 +26,4 @@ const aiConfig = registerAs('ai', () => ({
   togetherAiApiKey: process.env.TOGETHER_AI_API_KEY,
 }));
 
-export { appConfig, dbConfig, jwtConfig, googleConfig, aiConfig };
+export { appConfig, dbConfig, googleConfig, aiConfig };

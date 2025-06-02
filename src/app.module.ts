@@ -11,7 +11,6 @@ import { UsersModule } from './users/users.module';
 import {
   aiConfig,
   dbConfig,
-  jwtConfig,
   appConfig,
   googleConfig,
 } from './config/app.config';
@@ -20,7 +19,7 @@ import { IamModule } from './iam/iam.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig, dbConfig, aiConfig, jwtConfig, googleConfig],
+      load: [appConfig, dbConfig, aiConfig, googleConfig],
       validationSchema: Joi.object({
         DATABASE_HOST: Joi.string().required(),
         DATABASE_PORT: Joi.number().default(5432),
