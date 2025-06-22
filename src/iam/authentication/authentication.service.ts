@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import {
   Inject,
   Injectable,
@@ -13,6 +14,9 @@ import { HashingService } from '../hashing/hashing.service';
 import { jwtConfig } from '../config/jwt.config';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
+import { ActiveUserData } from '../interfaces/active-user-data.interface';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { RefreshTokenIdsStorage } from './refresh-token-ids.storage';
 
 @Injectable()
 export class AuthenticationService {
@@ -22,6 +26,7 @@ export class AuthenticationService {
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+    private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
   ) {}
 
   async signUp(signUpDto: SignUpDto) {
@@ -60,19 +65,68 @@ export class AuthenticationService {
       throw new UnauthorizedException();
     }
 
-    const accessToken = await this.jwtService.signAsync(
-      {
-        sub: user.id,
+    return await this.generateTokens(user);
+  }
+
+  async refreshTokens(refreshTokenDto: RefreshTokenDto) {
+    try {
+      const { sub, refreshTokenId } = await this.jwtService.verifyAsync<
+        Pick<ActiveUserData, 'sub'> & { refreshTokenId: string }
+      >(refreshTokenDto.refreshToken, {
+        secret: this.jwtConfiguration.secret,
+        issuer: this.jwtConfiguration.issuer,
+        audience: this.jwtConfiguration.audience,
+      });
+
+      const user = await this.userRepository.findOneByOrFail({
+        id: Number(sub),
+      });
+
+      const isValid = await this.refreshTokenIdsStorage.validate(
+        user.id,
+        refreshTokenId,
+      );
+
+      if (isValid) {
+        await this.refreshTokenIdsStorage.invalidate(user.id);
+      } else {
+        throw new Error('Invalid refresh token');
+      }
+
+      return await this.generateTokens(user);
+    } catch {
+      throw new UnauthorizedException();
+    }
+  }
+
+  private async generateTokens(user: User) {
+    const refreshTokenId = randomUUID();
+    const [accessToken, refreshToken] = await Promise.all([
+      this.signToken(user.id, this.jwtConfiguration.accessTokenTtl, {
         email: user.email,
+      }),
+      this.signToken(user.id, this.jwtConfiguration.refreshTokenTtl, {
+        refreshTokenId,
+      }),
+    ]);
+
+    await this.refreshTokenIdsStorage.insert(user.id, refreshTokenId);
+
+    return { accessToken, refreshToken };
+  }
+
+  private async signToken<T>(userId: number, expiresIn: number, payload?: T) {
+    return await this.jwtService.signAsync(
+      {
+        sub: userId,
+        ...(payload ?? {}),
       },
       {
         audience: this.jwtConfiguration.audience,
         issuer: this.jwtConfiguration.issuer,
         secret: this.jwtConfiguration.secret,
-        expiresIn: this.jwtConfiguration.accessTokenTtl,
+        expiresIn,
       },
     );
-
-    return { accessToken };
   }
 }

@@ -9,6 +9,8 @@ services:
     environment:
       POSTGRES_PASSWORD: pass123
       POSTGRES_DB: track-wise
+    volumes:
+      - pg-track-wise-data:/var/lib/postgresql/data
 
 #   server:
 #     build: .
@@ -28,5 +30,5 @@ services:
 #       - mongo
 #     volumes:
 #       - ./:/app
-# volumes:
-#   mongodb_data:
+volumes:
+  pg-track-wise-data:

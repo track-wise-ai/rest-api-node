@@ -10,11 +10,13 @@ import { AuthenticationController } from './authentication/authentication.contro
 import { AuthenticationService } from './authentication/authentication.service';
 import { AccessTokenGuard } from './authentication/guards/access-token.guard';
 import { AuthenticationGuard } from './authentication/guards/authentication.guard';
+import { RefreshToken } from './authentication/entities/refresh-token.entity';
+import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage';
 import { jwtConfig } from './config/jwt.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, RefreshToken]),
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
   ],
@@ -28,6 +30,7 @@ import { jwtConfig } from './config/jwt.config';
       useClass: AuthenticationGuard,
     },
     AccessTokenGuard,
+    RefreshTokenIdsStorage,
     AuthenticationService,
   ],
   controllers: [AuthenticationController],
