@@ -12,10 +12,10 @@ export class RefreshToken {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn()
-  user: User;
-
   @Column()
   tokenId: string;
+
+  @OneToOne(() => User, (user) => user.refreshTokens, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  user: User;
 }

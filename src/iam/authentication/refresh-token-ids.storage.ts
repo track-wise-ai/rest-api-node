@@ -11,7 +11,10 @@ export class RefreshTokenIdsStorage {
   ) {}
 
   async insert(userId: number, tokenId: string): Promise<void> {
-    await this.refreshTokenRepository.save({ user: { id: userId }, tokenId });
+    await this.refreshTokenRepository.upsert(
+      { user: { id: userId }, tokenId },
+      ['user.id'],
+    );
   }
 
   async validate(userId: number, tokenId: string): Promise<boolean> {
