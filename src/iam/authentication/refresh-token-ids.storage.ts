@@ -1,27 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RefreshToken } from './entities/refresh-token.entity';
+import { UserTokens } from '../../users/entities';
 
 @Injectable()
 export class RefreshTokenIdsStorage {
   constructor(
-    @InjectRepository(RefreshToken)
-    private readonly refreshTokenRepository: Repository<RefreshToken>,
+    @InjectRepository(UserTokens)
+    private readonly refreshTokenRepository: Repository<UserTokens>,
   ) {}
 
-  async insert(userId: number, tokenId: string): Promise<void> {
+  async insert(userId: number, refreshTokenId: string): Promise<void> {
     await this.refreshTokenRepository.upsert(
-      { user: { id: userId }, tokenId },
+      { user: { id: userId }, refreshTokenId },
       ['user.id'],
     );
   }
 
-  async validate(userId: number, tokenId: string): Promise<boolean> {
+  async validate(userId: number, refreshTokenId: string): Promise<boolean> {
     const token = await this.refreshTokenRepository.findOneBy({
       user: { id: userId },
     });
-    return tokenId === token?.tokenId;
+    return refreshTokenId === token?.refreshTokenId;
   }
 
   async invalidate(userId: number): Promise<void> {

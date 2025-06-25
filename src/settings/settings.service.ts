@@ -1,7 +1,7 @@
 import { type Repository, type EntityManager } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/entities';
+import { User, UserTokens } from '../users/entities';
 import { AI_MODELS } from '../ai/constants';
 import { type UpdateSettingsDto, type ResponseSettingsDto } from './dto';
 import { AISettings, JiraSettings, GoogleCalendarSettings } from './entities';
@@ -18,6 +18,8 @@ export class SettingsService {
     private readonly jiraSettingsRepository: Repository<JiraSettings>,
     @InjectRepository(GoogleCalendarSettings)
     private readonly googleSettingsRepository: Repository<GoogleCalendarSettings>,
+    @InjectRepository(UserTokens)
+    private readonly userTokensRepository: Repository<UserTokens>,
   ) {}
 
   async getUserSettings(userId: User['id']): Promise<ResponseSettingsDto> {
@@ -44,7 +46,12 @@ export class SettingsService {
   private async findUserWithRelations(userId: User['id']) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['aiSettings', 'jiraSettings', 'googleCalendarSettings'],
+      relations: [
+        'tokens',
+        'aiSettings',
+        'jiraSettings',
+        'googleCalendarSettings',
+      ],
     });
 
     if (!user) {
@@ -57,7 +64,7 @@ export class SettingsService {
   private mapToResponse(user: User): ResponseSettingsDto {
     return {
       google: {
-        connect: Boolean(user.googleCalendarSettings?.accessToken),
+        connect: Boolean(user.tokens?.googleAccessToken),
         selectedCalendars: user.googleCalendarSettings?.calendarIds || [],
       },
       ai: {

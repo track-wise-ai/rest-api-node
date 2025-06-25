@@ -15,9 +15,6 @@ export class GoogleCalendarSettings {
   @Column({ type: 'simple-array', nullable: true })
   calendarIds: string[];
 
-  @Column({ nullable: true })
-  accessToken: string;
-
   @OneToOne(() => User, (user) => user.googleCalendarSettings, {
     onDelete: 'CASCADE',
   })

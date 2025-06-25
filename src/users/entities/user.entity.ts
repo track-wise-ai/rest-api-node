@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
-import { RefreshToken } from '../../iam/authentication/entities';
+import { UserTokens } from './user-tokens.entity';
 import {
   AISettings,
   JiraSettings,
@@ -17,8 +17,8 @@ export class User {
   @Column()
   password: string;
 
-  @OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user)
-  refreshTokens: RefreshToken[];
+  @OneToOne(() => UserTokens, (tokens) => tokens.user)
+  tokens: UserTokens;
 
   @OneToOne(() => GoogleCalendarSettings, (settings) => settings.user)
   googleCalendarSettings: GoogleCalendarSettings;
