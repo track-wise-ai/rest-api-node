@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { GoogleController } from './google.controller';
 import { GoogleService } from './google.service';
-import { ConfigModule } from '@nestjs/config';
+import { GoogleAuthService } from '../iam/authentication/social/google-auth.service';
+import { UserTokens } from '../users/entities';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, TypeOrmModule.forFeature([UserTokens])],
   controllers: [GoogleController],
-  providers: [GoogleService],
+  providers: [GoogleService, GoogleAuthService],
 })
 export class GoogleModule {}

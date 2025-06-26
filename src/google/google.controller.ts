@@ -1,27 +1,24 @@
 import { Get, Controller } from '@nestjs/common';
+import { ActiveUser } from '../iam/decorators/active-user.decorators';
+import { type ActiveUserData } from '../iam/interfaces';
 import { GoogleService } from './google.service';
 
 @Controller('/google')
 export class GoogleController {
   constructor(private readonly googleService: GoogleService) {}
 
-  @Get('/callback')
-  authCallback() {
-    return this.googleService.authCallback();
-  }
-
   @Get('/events')
   getEvents() {
-    return this.googleService.getEvents();
+    return [];
   }
 
   @Get('/calendars')
   getCalendars() {
-    return this.googleService.getCalendars();
+    return [];
   }
 
   @Get('/auth-link')
-  getAuthLink() {
-    return this.googleService.getAuthLink();
+  getAuthLink(@ActiveUser() user: ActiveUserData) {
+    return this.googleService.getAuthLink(user.sub);
   }
 }

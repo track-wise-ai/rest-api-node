@@ -12,6 +12,19 @@ services:
     volumes:
       - pg-track-wise-data:/var/lib/postgresql/data
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin4
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
 #   server:
 #     build: .
 #     container_name: node-track-wise
@@ -32,3 +45,4 @@ services:
 #       - ./:/app
 volumes:
   pg-track-wise-data:
+  pgadmin-data:

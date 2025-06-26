@@ -15,7 +15,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // remove all fields that are not in the DTO
-      forbidNonWhitelisted: true, // throw an error if there is a non-whitelisted field
+      forbidNonWhitelisted: false, // throw an error if there is a non-whitelisted field
       transform: true, // transform the data to the type of the DTO
     }),
   );

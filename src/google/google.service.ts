@@ -1,24 +1,16 @@
+import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { GoogleAuthService } from '../iam/authentication/social/google-auth.service';
+import { User } from '../users/entities';
 
 @Injectable()
 export class GoogleService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly googleAuthService: GoogleAuthService) {}
 
-  authCallback() {
-    return 'google:callback';
-  }
+  async getAuthLink(userId: User['id']) {
+    const state = randomUUID();
+    const authUrl = await this.googleAuthService.generateAuthUrl(userId, state);
 
-  getEvents() {
-    return 'google:events';
-  }
-
-  getCalendars() {
-    return 'google:calendars';
-  }
-
-  getAuthLink() {
-    console.log(this.configService.get('google'));
-    return 'google:auth-link';
+    return { authUrl };
   }
 }
