@@ -1,8 +1,8 @@
 import { google, Auth } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Injectable, OnModuleInit } from '@nestjs/common';
 import { User, UserTokens } from '../../../users/entities';
 import { GoogleCallbackQueryDto } from './dto';
 
@@ -31,6 +31,10 @@ export class GoogleAuthService implements OnModuleInit {
       clientSecret: googleConfig.clientSecret,
       redirectUri: googleConfig.redirectUri,
     });
+  }
+
+  getOAuthClient() {
+    return this.oauthClient;
   }
 
   async generateAuthUrl(userId: User['id'], state: string): Promise<string> {
@@ -71,6 +75,20 @@ export class GoogleAuthService implements OnModuleInit {
     } catch {
       // todo: log this error
     }
-    return;
+  }
+
+  async renewCredentials(userId: User['id']) {
+    const userTokens = await this.userTokensRepository.findOneBy({
+      user: { id: userId },
+    });
+
+    if (!userTokens?.googleAccessToken || !userTokens?.googleRefreshToken) {
+      throw new Error('No google credentials found');
+    }
+
+    this.oauthClient.setCredentials({
+      access_token: userTokens.googleAccessToken,
+      refresh_token: userTokens.googleRefreshToken,
+    });
   }
 }

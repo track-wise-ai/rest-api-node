@@ -13,8 +13,8 @@ export class GoogleController {
   }
 
   @Get('/calendars')
-  getCalendars() {
-    return [];
+  getCalendars(@ActiveUser() user: ActiveUserData) {
+    return this.googleService.getCalendars(user.sub);
   }
 
   @Get('/auth-link')
