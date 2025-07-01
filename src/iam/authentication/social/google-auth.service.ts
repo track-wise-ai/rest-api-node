@@ -1,6 +1,6 @@
 import { google, Auth } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserTokens } from '../../../users/entities';
@@ -14,16 +14,15 @@ interface GoogleConfig {
 }
 
 @Injectable()
-export class GoogleAuthService implements OnModuleInit {
+export class GoogleAuthService {
   private oauthClient: Auth.OAuth2Client;
 
   constructor(
     private configService: ConfigService,
+
     @InjectRepository(UserTokens)
     private readonly userTokensRepository: Repository<UserTokens>,
-  ) {}
-
-  onModuleInit() {
+  ) {
     const googleConfig = this.configService.get<GoogleConfig>('google')!;
 
     this.oauthClient = new google.auth.OAuth2({
@@ -77,7 +76,7 @@ export class GoogleAuthService implements OnModuleInit {
     }
   }
 
-  async renewCredentials(userId: User['id']) {
+  async setCredentials(userId: User['id']) {
     const userTokens = await this.userTokensRepository.findOneBy({
       user: { id: userId },
     });

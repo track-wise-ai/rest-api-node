@@ -1,11 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { Request } from 'express';
 import { REQUEST_USER_KEY } from '../iam.constants';
-import { ActiveUserData } from '../interfaces/active-user-data.interface';
-
-interface AuthRequest extends Request {
-  [REQUEST_USER_KEY]?: ActiveUserData;
-}
+import { ActiveUserData, AuthRequest } from '../interfaces';
 
 export const ActiveUser = createParamDecorator(
   (field: keyof ActiveUserData | undefined, ctx: ExecutionContext) => {

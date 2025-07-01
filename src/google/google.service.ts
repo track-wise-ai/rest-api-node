@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { google } from 'googleapis';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { google, Auth } from 'googleapis';
+import { Injectable } from '@nestjs/common';
 import { GoogleAuthService } from '../iam/authentication/social/google-auth.service';
 import { User } from '../users/entities';
 
@@ -15,20 +15,10 @@ export class GoogleService {
     return { authUrl };
   }
 
-  async getCalendars(userId: User['id']) {
-    try {
-      await this.googleAuthService.renewCredentials(userId);
-    } catch {
-      throw new UnauthorizedException(
-        'Please re-authenticate with Google to continue',
-      );
-    }
-
-    const calendar = google.calendar({
-      version: 'v3',
-      auth: this.googleAuthService.getOAuthClient(),
-    });
+  async getCalendars(auth: Auth.OAuth2Client) {
+    const calendar = google.calendar({ version: 'v3', auth });
     const calendarList = await calendar.calendarList.list();
+
     return calendarList.data.items;
   }
 }
