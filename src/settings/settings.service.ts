@@ -1,7 +1,7 @@
 import { type Repository, type EntityManager } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserTokens } from '../users/entities';
+import { User } from '../users/entities';
 import { AI_MODELS } from '../ai/constants';
 import { type UpdateSettingsDto, type ResponseSettingsDto } from './dto';
 import { AISettings, JiraSettings, GoogleCalendarSettings } from './entities';
@@ -18,8 +18,6 @@ export class SettingsService {
     private readonly jiraSettingsRepository: Repository<JiraSettings>,
     @InjectRepository(GoogleCalendarSettings)
     private readonly googleSettingsRepository: Repository<GoogleCalendarSettings>,
-    @InjectRepository(UserTokens)
-    private readonly userTokensRepository: Repository<UserTokens>,
   ) {}
 
   async getUserSettings(userId: User['id']): Promise<ResponseSettingsDto> {
