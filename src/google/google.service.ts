@@ -2,13 +2,13 @@ import { randomUUID } from 'node:crypto';
 import { google, Auth } from 'googleapis';
 import { startOfWeek, endOfWeek, startOfDay, endOfDay } from 'date-fns';
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GoogleAuthService } from '../iam/authentication/social/google-auth.service';
 import { GoogleCalendarSettings } from '../settings/entities';
 import { User } from '../users/entities';
 import { EventsQueryDto } from './dto';
-import { GoogleEvent } from './types';
+import { GoogleEvent, GoogleCalendarsResponse, GoogleEventsResponse } from './types';
 
 const sortEvents = (a: GoogleEvent, b: GoogleEvent) => {
   const aDate = a.start?.dateTime || a.start?.date || new Date();
@@ -51,7 +51,16 @@ export class GoogleService {
 
   async getCalendars(auth: Auth.OAuth2Client) {
     const calendar = google.calendar({ version: 'v3', auth });
-    const calendarList = await calendar.calendarList.list();
+    let calendarList: GoogleCalendarsResponse;
+
+    try {
+      calendarList = await calendar.calendarList.list();
+    } catch (error) {
+      // todo: create logger
+      // todo: handle refresh token expiration
+      console.error(error?.response?.data?.error_description);
+      throw new InternalServerErrorException('Failed to get calendars');
+    }
 
     return calendarList.data.items;
   }
@@ -61,6 +70,7 @@ export class GoogleService {
     auth: Auth.OAuth2Client,
     params: EventsQueryDto,
   ) {
+    let events: GoogleEventsResponse[] = [];
     const calendar = google.calendar({ version: 'v3', auth });
     const weekStart = params.start
       ? startOfDay(new Date(params.start))
@@ -73,17 +83,24 @@ export class GoogleService {
       user: { id: userId },
     });
 
-    const events = await Promise.all(
-      (googleSettings?.calendarIds || []).map((calendarId) =>
-        calendar.events.list({
-          calendarId: calendarId,
-          timeMin: weekStart.toISOString(),
-          timeMax: weekEnd.toISOString(),
-          singleEvents: true,
-          orderBy: 'startTime',
-        }),
-      ),
-    );
+    try {
+      events = await Promise.all(
+        (googleSettings?.calendarIds || []).map((calendarId) =>
+          calendar.events.list({
+            calendarId: calendarId,
+            timeMin: weekStart.toISOString(),
+            timeMax: weekEnd.toISOString(),
+            singleEvents: true,
+            orderBy: 'startTime',
+          }),
+        ),
+      );
+    } catch (error) {
+      // todo: create logger
+      // todo: handle refresh token expiration
+      console.error(error?.response?.data?.error_description);
+      throw new InternalServerErrorException('Failed to get events');
+    }
 
     const sortedEvents: GoogleEvent[] = events
       .flatMap((event) => event?.data?.items || [])

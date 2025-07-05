@@ -1,4 +1,10 @@
-import { Get, Query, Controller, UnauthorizedException } from '@nestjs/common';
+import {
+  Get,
+  Query,
+  Controller,
+  UnauthorizedException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { Auth } from 'googleapis';
 import { ActiveUser } from '../iam/decorators';
 import { type ActiveUserData } from '../iam/interfaces';
@@ -16,7 +22,13 @@ export class GoogleController {
 
   @Get('/auth-link')
   getAuthLink(@ActiveUser() user: ActiveUserData) {
-    return this.googleService.getAuthLink(user.sub);
+    try {
+      return this.googleService.getAuthLink(user.sub);
+    } catch (e) {
+      // todo: create logger
+      console.error(e);
+      throw new InternalServerErrorException('Failed to get auth link');
+    }
   }
 
   @Get('/calendars')
@@ -29,7 +41,13 @@ export class GoogleController {
       throw new UnauthorizedException('Please re-authenticate with Google');
     }
 
-    return this.googleService.getCalendars(googleAuth);
+    try {
+      return this.googleService.getCalendars(googleAuth);
+    } catch (e) {
+      // todo: create logger
+      console.error(e?.response?.data?.error_description);
+      throw new InternalServerErrorException('Failed to get calendars');
+    }
   }
 
   @Get('/events')
@@ -45,6 +63,12 @@ export class GoogleController {
       throw new UnauthorizedException('Please re-authenticate with Google');
     }
 
-    return this.googleService.getEvents(userId, googleAuth, queryParams);
+    try {
+      return this.googleService.getEvents(userId, googleAuth, queryParams);
+    } catch (e) {
+      // todo: create logger
+      console.error(e?.response?.data?.error_description);
+      throw new InternalServerErrorException('Failed to get events');
+    }
   }
 }
