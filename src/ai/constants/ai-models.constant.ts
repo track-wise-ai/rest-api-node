@@ -1,8 +1,4 @@
 export const AI_MODELS = {
-  anthropic: {
-    title: 'Anthropic',
-    models: ['claude-3-5-haiku-20241022', 'claude-3-7-sonnet-20250219'],
-  },
   openrouter: {
     title: 'OpenRouter',
     models: [
@@ -17,18 +13,6 @@ export const AI_MODELS = {
       'meta-llama/llama-4-maverick:free',
       'meta-llama/llama-4-scout:free',
     ],
-  },
-  microsoft: {
-    title: 'Microsoft',
-    models: [
-      'microsoft/mai-ds-r1:free',
-      'microsoft/phi-4-reasoning-plus:free',
-      'microsoft/phi-4-reasoning:free',
-    ],
-  },
-  openai: {
-    title: 'OpenAI',
-    models: ['gpt-3.5-turbo', 'gpt-4o'],
   },
   together: {
     title: 'Together AI',

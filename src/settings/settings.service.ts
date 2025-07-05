@@ -68,6 +68,7 @@ export class SettingsService {
       ai: {
         models: AI_MODELS,
         selectedModel: user.aiSettings?.llm || '',
+        selectedProvider: user.aiSettings?.provider || '',
       },
       jira: {
         url: user.jiraSettings?.url || '',
@@ -107,10 +108,12 @@ export class SettingsService {
     if (!user.aiSettings) {
       user.aiSettings = this.aiSettingsRepository.create({
         llm: updateDto.aiModel || '',
+        provider: updateDto.aiProvider || '',
         user: { id: user.id },
       });
     } else {
       user.aiSettings.llm = updateDto.aiModel || '';
+      user.aiSettings.provider = updateDto.aiProvider || '';
     }
 
     await transactionEntityManager.save(AISettings, user.aiSettings);

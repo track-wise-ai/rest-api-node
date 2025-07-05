@@ -10,6 +10,7 @@ export interface ResponseSettingsDto {
   ai: {
     models: AIModels;
     selectedModel: string;
+    selectedProvider: string;
   };
   jira: {
     url: string;
