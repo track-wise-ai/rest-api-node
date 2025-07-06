@@ -1,8 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Scope, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { AiGenerateEventsDto } from './dto';
+import { User } from '../users/entities';
+import { AISettings } from '../settings/entities';
+import { AIStrategyFactory } from './strategies/ai-strategy.factory';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class AiService {
-  generate() {
-    return 'ai';
+  constructor(
+    @InjectRepository(AISettings)
+    private readonly aiSettingsRepository: Repository<AISettings>,
+    private readonly aiStrategyFactory: AIStrategyFactory,
+  ) {}
+
+  async generate(userId: User['id'], events: AiGenerateEventsDto['events']) {
+    const aiSettings = await this.aiSettingsRepository.findOneBy({
+      user: { id: userId },
+    });
+
+    if (!aiSettings) {
+      throw new NotFoundException('AI settings not found for user');
+    }
+
+    try {
+      const aiStrategy = this.aiStrategyFactory.getStrategy(aiSettings);
+      const prompt = aiStrategy.buildPrompt(events);
+      return await aiStrategy.chat(prompt);
+    } catch (error) {
+      throw new Error(`Failed to generate AI response: ${error.message}`);
+    }
   }
 }

@@ -8,7 +8,11 @@ import { GoogleAuthService } from '../iam/authentication/social/google-auth.serv
 import { GoogleCalendarSettings } from '../settings/entities';
 import { User } from '../users/entities';
 import { EventsQueryDto } from './dto';
-import { GoogleEvent, GoogleCalendarsResponse, GoogleEventsResponse } from './types';
+import {
+  GoogleEvent,
+  GoogleCalendarsResponse,
+  GoogleEventsResponse,
+} from './types';
 
 const sortEvents = (a: GoogleEvent, b: GoogleEvent) => {
   const aDate = a.start?.dateTime || a.start?.date || new Date();

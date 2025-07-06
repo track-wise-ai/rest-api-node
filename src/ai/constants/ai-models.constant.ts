@@ -7,7 +7,6 @@ export const AI_MODELS = {
       'google/gemma-3-12b-it:free',
       'google/gemma-3-27b-it:free',
       'mistralai/mistral-small-3.1-24b-instruct:free',
-      'mistralai/mistral-small-24b-instruct-2501:free',
       'mistralai/mistral-nemo:free',
       'meta-llama/llama-3.3-70b-instruct:free',
       'meta-llama/llama-4-maverick:free',
@@ -22,3 +21,5 @@ export const AI_MODELS = {
     ],
   },
 } as const;
+
+export const DEFAULT_PROVIDER = 'openrouter';
