@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadGatewayException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { formatISO } from 'date-fns';
@@ -32,12 +36,20 @@ export class JiraService {
             method: 'POST',
             headers,
             body: JSON.stringify(this.getPayload(item)),
-          }).then((res) => res.json()),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data?.error) {
+                throw new Error(data.error);
+              }
+            }),
         ),
       );
     } catch (error) {
       console.error(error);
-      throw new Error(`Failed to sync worklog: ${error.message}`);
+      throw new BadGatewayException(
+        'Failed to sync worklog: please recheck Jira settings',
+      );
     }
   }
 
