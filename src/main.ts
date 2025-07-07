@@ -11,7 +11,7 @@ async function bootstrap() {
         : true, // Same origin only in production,
     credentials: true,
   });
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v2');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // remove all fields that are not in the DTO
