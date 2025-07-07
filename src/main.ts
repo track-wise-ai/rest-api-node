@@ -6,9 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin:
-      process.env.NODE_ENV === 'development'
-        ? '*' // Allow any origin in development
-        : true, // Same origin only in production,
+      process.env.NODE_ENV === 'development' ? '*' : process.env.FRONTEND_URL,
     credentials: true,
   });
   app.setGlobalPrefix('api/v2');
@@ -19,7 +17,12 @@ async function bootstrap() {
       transform: true, // transform the data to the type of the DTO
     }),
   );
-  await app.listen(process.env.PORT ?? 3000);
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  console.log(`Application is running on: ${port}`);
 }
 
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Failed to start application:', err);
+  process.exit(1);
+});

@@ -2,7 +2,7 @@ import {
   Get,
   Query,
   Controller,
-  UnauthorizedException,
+  ForbiddenException,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Auth } from 'googleapis';
@@ -38,7 +38,7 @@ export class GoogleController {
     try {
       googleAuth = await this.googleAuthUserFactory.createForUser(userId);
     } catch {
-      throw new UnauthorizedException('Please re-authenticate with Google');
+      throw new ForbiddenException('Please re-authenticate with Google');
     }
 
     try {
@@ -60,7 +60,7 @@ export class GoogleController {
     try {
       googleAuth = await this.googleAuthUserFactory.createForUser(userId);
     } catch {
-      throw new UnauthorizedException('Please re-authenticate with Google');
+      throw new ForbiddenException('Please re-authenticate with Google');
     }
 
     try {

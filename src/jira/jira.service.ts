@@ -39,8 +39,10 @@ export class JiraService {
           })
             .then((res) => res.json())
             .then((data) => {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               if (data?.error) {
-                throw new Error(data.error);
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                throw new Error(data.error as string);
               }
             }),
         ),

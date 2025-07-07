@@ -11,6 +11,7 @@ const dbConfig = registerAs('db', () => ({
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
+  url: process.env.DATABASE_URL,
 }));
 
 const googleConfig = registerAs('google', () => ({
