@@ -15,5 +15,8 @@
 │   ├── /calendars (GET)    - fetch calendar list
 │   └── /auth-link (GET)    - get auth url
 ├── /ai (POST)              - generate summary with ai
-└── /jira/track-log (POST)  - save worklog in Jira
+└── /jira/worklog (POST)    - save worklog in Jira
 ```
+
+### Development
+* Run proxy for handling Google OAuth on localhost `ngrok http 5001` then copy `Forwarding` URL to the `.env` and to the Google Console for redirect uri
