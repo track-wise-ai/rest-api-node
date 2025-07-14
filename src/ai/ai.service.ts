@@ -5,6 +5,7 @@ import { AiGenerateEventsDto } from './dto';
 import { User } from '../users/entities';
 import { AISettings } from '../settings/entities';
 import { AIStrategyFactory } from './strategies/ai-strategy.factory';
+import { summaryLevelMap } from './constants';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AiService {
@@ -31,5 +32,9 @@ export class AiService {
     } catch (error) {
       throw new Error(`Failed to generate AI response: ${error.message}`);
     }
+  }
+
+  getSummaryLevels() {
+    return summaryLevelMap;
   }
 }

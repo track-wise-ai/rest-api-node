@@ -1,4 +1,4 @@
-import { Post, Body, Controller } from '@nestjs/common';
+import { Get, Post, Body, Controller } from '@nestjs/common';
 import { AiGenerateEventsDto } from './dto';
 import { ActiveUser } from '../iam/decorators';
 import { AiService } from './ai.service';
@@ -14,5 +14,10 @@ export class AiController {
     @Body() eventsDto: AiGenerateEventsDto,
   ) {
     return this.aiService.generate(userId, eventsDto.events);
+  }
+
+  @Get('/summary-levels')
+  getSummaryLevels() {
+    return this.aiService.getSummaryLevels();
   }
 }

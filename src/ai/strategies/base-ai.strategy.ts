@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AiGenerateEventsDto } from '../dto';
 import { AIStrategy, Options } from '../types';
-import { buildPrompt } from './buildPrompt';
+import { buildPrompt } from './utils';
 
 @Injectable()
 export abstract class BaseAIStrategy implements AIStrategy {

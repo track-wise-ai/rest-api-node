@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../users/entities';
+import { SummaryLevel } from '../types';
 
 @Entity('ai_settings')
 export class AISettings {
@@ -20,6 +21,14 @@ export class AISettings {
 
   @Column({ type: 'text', nullable: true })
   fineTuning: string;
+
+  @Column({
+    type: 'enum',
+    enum: SummaryLevel,
+    default: SummaryLevel.MEDIUM,
+    nullable: false,
+  })
+  summaryLevel: SummaryLevel;
 
   @OneToOne(() => User, (user) => user.aiSettings, { onDelete: 'CASCADE' })
   @JoinColumn()

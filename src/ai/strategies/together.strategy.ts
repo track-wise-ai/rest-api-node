@@ -10,7 +10,7 @@ export class TogetherStrategy extends BaseAIStrategy {
   }
 
   async chat(events: AiGenerateEventsDto['events']): Promise<string> {
-    const prompt = this.buildPrompt(events, this.options.fineTuning || '');
+    const prompt = this.buildPrompt(events, this.options);
 
     try {
       const result = await this.client.chat.completions.create({

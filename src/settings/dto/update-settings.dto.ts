@@ -1,6 +1,7 @@
 import {
   IsIn,
   IsUrl,
+  IsEnum,
   IsEmail,
   IsArray,
   IsString,
@@ -8,6 +9,7 @@ import {
   IsOptional,
   ValidateIf,
 } from 'class-validator';
+import { SummaryLevel } from '../types';
 import { JiraAuthType } from '../settings.constants';
 
 export class UpdateSettingsDto {
@@ -19,6 +21,10 @@ export class UpdateSettingsDto {
 
   @IsString()
   aiFineTuning?: string;
+
+  @IsOptional()
+  @IsEnum(SummaryLevel)
+  aiSummaryLevel?: SummaryLevel;
 
   @IsArray()
   @IsString({ each: true })

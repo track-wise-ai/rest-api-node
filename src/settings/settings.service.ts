@@ -6,6 +6,7 @@ import { AI_MODELS } from '../ai/constants';
 import { type UpdateSettingsDto, type ResponseSettingsDto } from './dto';
 import { AISettings, JiraSettings, GoogleCalendarSettings } from './entities';
 import { JiraAuthType } from './settings.constants';
+import { SummaryLevel } from './types';
 
 @Injectable()
 export class SettingsService {
@@ -70,6 +71,8 @@ export class SettingsService {
         selectedModel: user.aiSettings?.llm || '',
         selectedProvider: user.aiSettings?.provider || '',
         fineTuning: user.aiSettings?.fineTuning || '',
+        selectedSummaryLevel:
+          user.aiSettings?.summaryLevel || SummaryLevel.MEDIUM,
       },
       jira: {
         url: user.jiraSettings?.url || '',
@@ -111,12 +114,15 @@ export class SettingsService {
         llm: updateDto.aiModel || '',
         provider: updateDto.aiProvider || '',
         fineTuning: updateDto.aiFineTuning || '',
+        summaryLevel: updateDto.aiSummaryLevel || SummaryLevel.MEDIUM,
         user: { id: user.id },
       });
     } else {
       user.aiSettings.llm = updateDto.aiModel || '';
       user.aiSettings.provider = updateDto.aiProvider || '';
       user.aiSettings.fineTuning = updateDto.aiFineTuning || '';
+      user.aiSettings.summaryLevel =
+        updateDto.aiSummaryLevel || SummaryLevel.MEDIUM;
     }
 
     await transactionEntityManager.save(AISettings, user.aiSettings);

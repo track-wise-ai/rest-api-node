@@ -1,16 +1,15 @@
-import { AiGenerateEventDto, AiGenerateEventsDto } from '../dto';
-
-const formatEvents = (event: AiGenerateEventDto) => ({
-  start: event.start.dateTime || event.start.date,
-  end: event?.end?.dateTime || event?.end?.date,
-  summary: event?.summary || '',
-  ...(event?.description ? { description: event.description } : {}),
-});
+import { type AiGenerateEventsDto } from '../../dto';
+import { type Options } from '../../types';
+import { formatEvents } from './format-events';
+import { summaryLevelMap } from '../../constants';
+import { SummaryLevel } from '../../../settings/types';
 
 const buildPrompt = (
   events: AiGenerateEventsDto['events'],
-  fineTuning: string = '',
+  options: Options,
 ) => {
+  const summaryLevel: SummaryLevel =
+    options.summaryLevel || SummaryLevel.MEDIUM;
   const formatedEvents = (events || []).map(formatEvents);
 
   const message =
@@ -24,11 +23,13 @@ REQUIREMENTS:
 - Group events by calendar day (00:00–23:59 UTC).
 - Merge similar activities (e.g. interviews, company meetings).
 - Skip days with no events.
-- For each day, return one concise sentence (20–30 words) in past tense, summarizing activities.
 - Use professional, neutral tone. Avoid emojis, links, personal pronouns.
 - Output only a minified JSON array in this schema: [{"date":"YYYY-MM-DD","summary":"..."}]
-- ${fineTuning}
+- ${summaryLevelMap[summaryLevel]}.
+- ${options.fineTuning || ''}
 `.trim();
+
+  console.log('>>> prompt:', message);
 
   return message;
 };
