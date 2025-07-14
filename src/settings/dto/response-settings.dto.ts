@@ -11,6 +11,7 @@ export interface ResponseSettingsDto {
     models: AIModels;
     selectedModel: string;
     selectedProvider: string;
+    fineTuning: string;
   };
   jira: {
     url: string;

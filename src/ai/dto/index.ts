@@ -1,1 +1,1 @@
-export { AiGenerateEventsDto } from './ai-generate.dto';
+export { AiGenerateEventsDto, AiGenerateEventDto } from './ai-generate.dto';

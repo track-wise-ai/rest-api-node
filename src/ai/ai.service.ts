@@ -25,8 +25,9 @@ export class AiService {
 
     try {
       const aiStrategy = this.aiStrategyFactory.getStrategy(aiSettings);
-      const prompt = aiStrategy.buildPrompt(events);
-      return await aiStrategy.chat(prompt);
+      const result = await aiStrategy.chat(events);
+
+      return result;
     } catch (error) {
       throw new Error(`Failed to generate AI response: ${error.message}`);
     }

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AiGenerateEventsDto } from '../dto';
 import { AIStrategy, Options } from '../types';
 import { buildPrompt } from './buildPrompt';
 
@@ -15,7 +16,7 @@ export abstract class BaseAIStrategy implements AIStrategy {
 
   abstract initializeClient(): void;
 
-  abstract chat(message: string): Promise<string>;
+  abstract chat(events: AiGenerateEventsDto['events']): Promise<string>;
 
   buildPrompt = buildPrompt;
 }

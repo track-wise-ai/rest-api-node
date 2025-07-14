@@ -1,4 +1,5 @@
 import Together from 'together-ai';
+import { AiGenerateEventsDto } from '../dto';
 import { BaseAIStrategy } from './base-ai.strategy';
 
 export class TogetherStrategy extends BaseAIStrategy {
@@ -8,7 +9,9 @@ export class TogetherStrategy extends BaseAIStrategy {
     this.client = new Together({ apiKey: this.apiKey });
   }
 
-  async chat(message: string): Promise<string> {
+  async chat(events: AiGenerateEventsDto['events']): Promise<string> {
+    const prompt = this.buildPrompt(events, this.options.fineTuning || '');
+
     try {
       const result = await this.client.chat.completions.create({
         model: this.options.llm,
@@ -18,7 +21,7 @@ export class TogetherStrategy extends BaseAIStrategy {
         messages: [
           {
             role: 'user',
-            content: [{ type: 'text', text: message }],
+            content: [{ type: 'text', text: prompt }],
           },
         ],
       });

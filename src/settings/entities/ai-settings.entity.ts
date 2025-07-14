@@ -18,6 +18,9 @@ export class AISettings {
   @Column({ nullable: true })
   llm: string;
 
+  @Column({ type: 'text', nullable: true })
+  fineTuning: string;
+
   @OneToOne(() => User, (user) => user.aiSettings, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;

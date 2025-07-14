@@ -1,15 +1,17 @@
 import { AI_MODELS } from '../constants';
+import { AiGenerateEventsDto } from '../dto';
 
 export interface AIStrategy {
   initializeClient(): void;
-  chat(messages: string, options?: any): Promise<string>;
-  buildPrompt(events: any[]): string;
+  chat(events: AiGenerateEventsDto['events']): Promise<string>;
+  buildPrompt(events: AiGenerateEventsDto['events']): string;
 }
 
 export type ProviderType = keyof typeof AI_MODELS;
 
 export type Options = {
   llm: string;
+  fineTuning: string;
 };
 
-export type Strategies = Map<ProviderType, (opts: Options) => AIStrategy>;
+export type Strategies = Record<ProviderType, (opts: Options) => AIStrategy>;

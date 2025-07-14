@@ -17,6 +17,9 @@ export class UpdateSettingsDto {
   @IsString()
   aiProvider?: string;
 
+  @IsString()
+  aiFineTuning?: string;
+
   @IsArray()
   @IsString({ each: true })
   googleCalendars?: string[];

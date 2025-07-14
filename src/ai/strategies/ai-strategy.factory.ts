@@ -8,7 +8,7 @@ import { TogetherStrategy } from './together.strategy';
 
 @Injectable()
 export class AIStrategyFactory implements OnModuleInit {
-  private strategies: Strategies = new Map();
+  private strategies: Strategies;
 
   constructor(private readonly configService: ConfigService) {}
 
@@ -19,27 +19,26 @@ export class AIStrategyFactory implements OnModuleInit {
   private registerStrategies() {
     const aiConfig = this.configService.get<AIConfig>('ai');
 
-    this.strategies.set(
-      'openrouter',
-      (opts) => new OpenRouterStrategy(aiConfig?.openRouterApiKey || '', opts),
-    );
-
-    this.strategies.set(
-      'together',
-      (opts) => new TogetherStrategy(aiConfig?.togetherAiApiKey || '', opts),
-    );
+    this.strategies = {
+      openrouter: (opts) =>
+        new OpenRouterStrategy(aiConfig?.openRouterApiKey || '', opts),
+      together: (opts) =>
+        new TogetherStrategy(aiConfig?.togetherAiApiKey || '', opts),
+    };
   }
 
   getStrategy(settings: AISettings): AIStrategy {
-    const provider = settings.provider || DEFAULT_PROVIDER;
+    const provider = (settings.provider || DEFAULT_PROVIDER) as ProviderType;
     const llm = settings.llm || AI_MODELS[DEFAULT_PROVIDER].models[0];
-    const strategyFactory = this.strategies.get(provider as ProviderType);
+    const fineTuning = settings.fineTuning || '';
+    const strategyFactory = this.strategies[provider];
+    const options = { ...settings, llm, fineTuning };
 
     if (!strategyFactory) {
       throw new Error(`No strategy found for provider: ${provider}`);
     }
 
-    const strategy = strategyFactory({ llm });
+    const strategy = strategyFactory(options);
     strategy.initializeClient();
 
     return strategy;

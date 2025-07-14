@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { AiGenerateEventsDto } from '../dto';
 import { BaseAIStrategy } from './base-ai.strategy';
 
 export class OpenRouterStrategy extends BaseAIStrategy {
@@ -17,13 +18,15 @@ export class OpenRouterStrategy extends BaseAIStrategy {
     });
   }
 
-  async chat(message: string): Promise<string> {
+  async chat(events: AiGenerateEventsDto['events']): Promise<string> {
+    const prompt = this.buildPrompt(events, this.options.fineTuning || '');
+
     try {
       const result = await this.client.chat.completions.create({
         model: this.options?.llm,
         // temperature: 1,
         // max_tokens: 800,
-        messages: [{ role: 'user', content: message }],
+        messages: [{ role: 'user', content: prompt }],
       });
 
       return result.choices[0]?.message?.content || '';
