@@ -4,8 +4,8 @@ const summaryLevelMap: Record<SummaryLevel, string> = {
   short:
     'Return one brief phrase (≤12 words) in past tense summarizing the day.',
   medium:
-    'For each day, return one concise sentence (20–30 words) in past tense summarizing activities.',
-  long: 'For each event, write a detailed sentence (20–30 words) in past tense describing topic, participants, and outcomes.',
+    'For each day, return one concise sentence (40–50 words) in past tense summarizing activities.',
+  long: 'For each event, write a detailed sentence (40–50 words) in past tense describing topic, participants, and outcomes.',
 } as const;
 
 export { summaryLevelMap };

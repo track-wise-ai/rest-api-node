@@ -1,6 +1,8 @@
 import { type AiGenerateEventsDto } from '../../dto';
 import { type Options } from '../../types';
-import { formatEvents } from './format-events';
+import { normalizeEvents } from './normalize-events';
+import { cleanEvents } from './clean-events';
+import { groupEventsByDay } from './group-events-by-day';
 import { summaryLevelMap } from '../../constants';
 import { SummaryLevel } from '../../../settings/types';
 
@@ -10,12 +12,15 @@ const buildPrompt = (
 ) => {
   const summaryLevel: SummaryLevel =
     options.summaryLevel || SummaryLevel.MEDIUM;
-  const formatedEvents = (events || []).map(formatEvents);
+
+  const formatedEvents = normalizeEvents(events);
+  const cleanedEvents = cleanEvents(formatedEvents);
+  const groupedEvents = groupEventsByDay(cleanedEvents);
 
   const message =
     `Convert Google Calendar events to Jira worklog-style daily summaries.
 
-INPUTS: ${JSON.stringify(formatedEvents, null, 0)}
+INPUTS: ${JSON.stringify(groupedEvents, null, 0)}
 
 REQUIREMENTS:
 - Normalize event times to UTC.
@@ -28,8 +33,6 @@ REQUIREMENTS:
 - ${summaryLevelMap[summaryLevel]}.
 - ${options.fineTuning || ''}
 `.trim();
-
-  console.log('>>> prompt:', message);
 
   return message;
 };
