@@ -22,8 +22,6 @@ export class AIStrategyFactory implements OnModuleInit {
     this.strategies = {
       openrouter: (opts) =>
         new OpenRouterStrategy(aiConfig?.openRouterApiKey || '', opts),
-      together: (opts) =>
-        new TogetherStrategy(aiConfig?.togetherAiApiKey || '', opts),
     };
   }
 

@@ -2,22 +2,14 @@ export const AI_MODELS = {
   openrouter: {
     title: 'OpenRouter',
     models: [
-      'google/gemma-3-1b-it:free',
-      'google/gemma-3-4b-it:free',
-      'google/gemma-3-12b-it:free',
-      'google/gemma-3-27b-it:free',
-      'mistralai/mistral-small-3.1-24b-instruct:free',
-      'mistralai/mistral-nemo:free',
+      'google/gemma-4-26b-a4b-it:free',
+      'google/gemma-4-31b-it:free',
+      'google/lyria-3-pro-preview',
+      'google/lyria-3-clip-preview',
+      'openai/gpt-oss-120b:free',
+      'openai/gpt-oss-20b:free',
       'meta-llama/llama-3.3-70b-instruct:free',
-      'meta-llama/llama-4-maverick:free',
-      'meta-llama/llama-4-scout:free',
-    ],
-  },
-  together: {
-    title: 'Together AI',
-    models: [
-      'meta-llama/Llama-3.3-70B-Instruct-Turbo-Free',
-      'meta-llama/Llama-Vision-Free',
+      'meta-llama/llama-3.2-3b-instruct:free',
     ],
   },
 } as const;
